@@ -1,0 +1,14 @@
+from fastapi import FastAPI
+
+from techconnect_classes.api import course_router, recommendation_router, user_router
+
+app = FastAPI()
+
+app.include_router(course_router)
+app.include_router(user_router)
+app.include_router(recommendation_router)
+
+
+@app.get("/")
+def root():
+    return {"message": "Server running."}
