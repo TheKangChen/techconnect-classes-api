@@ -1,0 +1,5 @@
+# macos annoyance
+.DS_Store
+
+# nvim sessions
+session.local.vim
