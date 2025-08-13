@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.types import Integer, String
+from sqlalchemy.types import Integer, String, Text
 
 from techconnect_classes.database.base_class import Base
 
@@ -10,7 +10,7 @@ class Course(Base):
 
     id = Column(Integer, primary_key=True)
     course_name = Column(String, nullable=False, unique=True)
-    description = Column(String, nullable=False)
+    description = Column(Text, nullable=False)
     level_id = Column(Integer, ForeignKey("levels.id"), nullable=False)
     format_id = Column(Integer, ForeignKey("formats.id"), nullable=False)
 
