@@ -1,7 +1,42 @@
 [project]
-name = "backend"
+name = "techconnect-classes-api"
 version = "0.1.0"
-description = "Add your description here"
+description = "Simple application to discover NYPL TechConnect classes and track the classes you've taken"
+authors = [{name = "Kang Chen", email = "kangchen.work@gmail.com"}]
 readme = "README.md"
 requires-python = ">=3.13.5"
-dependencies = []
+license = "MIT"
+dependencies = [
+    "fastapi[standard]>=0.116.1",
+    "pandas>=2.3.1",
+    "passlib[bcrypt]>=1.7.4",
+    "pydantic>=2.11.7",
+    "pydantic-settings>=2.10.1",
+    "sqlalchemy>=2.0.42",
+    "uvicorn>=0.35.0",
+]
+
+[dependency-groups]
+dev = [
+    "psycopg2-binary>=2.9.10",
+    "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
+    "pre-commit>=4.3.0",
+    "rich>=14.1.0",
+    "ruff>=0.12.9",
+]
+
+[build-system]
+requires = ["uv_build >= 0.7.19, <0.9.0"]
+build-backend = "uv_build"
+
+[tool.ruff]
+extend-exclude = ["tests", "migrations/*", "__init__.py"]
+indent-width = 4
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"

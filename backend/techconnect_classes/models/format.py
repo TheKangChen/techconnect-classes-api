@@ -2,7 +2,7 @@ from sqlalchemy import Column
 from sqlalchemy.orm import relationship
 from sqlalchemy.types import Integer, String
 
-from techconnect_classes.database.base_class import Base
+from techconnect_classes.database.db import Base
 
 
 class Format(Base):

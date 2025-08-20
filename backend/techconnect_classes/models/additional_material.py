@@ -2,7 +2,7 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.types import Integer, String
 
-from techconnect_classes.database.base_class import Base
+from techconnect_classes.database.db import Base
 
 
 class AdditionalMaterial(Base):
