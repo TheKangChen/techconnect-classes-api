@@ -1,6 +1,6 @@
-from techconnect_classes.core.config import settings
-from techconnect_classes.database import get_engine, get_sqlalchemy_db_url
-from techconnect_classes.database.base_class import Base
+from techconnect_classes_api.core.config import settings
+from techconnect_classes_api.database import get_engine, get_sqlalchemy_db_url
+from techconnect_classes_api.database.db import Base
 
 
 def create_tables() -> None:

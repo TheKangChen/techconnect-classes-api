@@ -6,8 +6,8 @@ import pandas as pd
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from techconnect_classes.database import get_managed_db
-from techconnect_classes.models import Course, Format, Language, Level, Series
+from techconnect_classes_api.database import get_managed_db
+from techconnect_classes_api.models import Course, Format, Language, Level, Series
 
 log = logging.getLogger(__name__)
 
@@ -221,7 +221,9 @@ def create_handouts_df(df: pd.DataFrame) -> pd.DataFrame:
         ).one()
         lang_ho_df["language_code"] = lang_obj.language_code
         lang_ho_df = lang_ho_df.rename(columns={ho_lang: "url"})
-        print(f"{handout_language} handout dataframe created: {lang_obj.language_code}")
+        log.debug(
+            f"{handout_language} handout dataframe created: {lang_obj.language_code}"
+        )
         return lang_ho_df
 
     # Get all handout columns in dataframe with mask
