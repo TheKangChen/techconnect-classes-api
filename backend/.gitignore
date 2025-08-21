@@ -1,3 +1,13 @@
+# ENV files
 .env
 .env.dev
 .env.test
+
+# Logs
+logs/
+
+# Resources
+# resources/
+
+# Cache files
+__pycache__/
