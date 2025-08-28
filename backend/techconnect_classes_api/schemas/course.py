@@ -1,0 +1,107 @@
+from pydantic import BaseModel, Field, HttpUrl
+
+
+# Base schemas
+class CourseBase(BaseModel):
+    course_name: str = Field(
+        ..., examples=["Intermediate Python Functions", "Microsoft Excel For Beginners"]
+    )
+
+
+class Handout(BaseModel):
+    language_code: str = Field(..., examples=["en", "es", "zh", "bn", "fr", "ru"])
+    url: HttpUrl = Field(..., description="Url to course handout")
+
+
+# API endpoint schemas
+class CourseNodeQuery(BaseModel):
+    """Schema for the query parameters of /courses endpoint."""
+
+    level: str | None = None
+    format: str | None = None
+    series: str | None = None
+    search: str | None = None
+
+
+class CourseNodeResponse(CourseBase):
+    """Schema for the /courses endpoint."""
+
+    id: int = Field(..., ge=1)
+
+
+class CourseDetailResponse(CourseBase):
+    """Schema for the /courses/{id}/ endpoint."""
+
+    description: str = Field(..., description="Course description.")
+    series: list[str] = Field(
+        ...,
+        description="The series or topic a course is part of.",
+        examples=["3d printing", "microsoft excel", "python"],
+    )
+    level: str = Field(..., examples=["none", "beginner", "intermediate", "advanced"])
+    format: str = Field(..., examples=["class", "lab", "workshop"])
+    available_handouts: list[Handout] | None = None
+    additional_materials: list[HttpUrl] | None = None
+    link_to_upcoming_sessions: HttpUrl = Field(
+        ...,
+        description="Upcoming sessions of course on NYPL techconnect classes page.",
+        examples=["https://www.nypl.org/techconnect?keyword=Python+for+Beginners"],
+    )
+
+
+class CourseUpcomingLinkResponse(BaseModel):
+    """Schema for the redirect link from /courses/{id}/upcoming."""
+
+    link_to_upcoming_sessions: HttpUrl = Field(
+        ...,
+        description="Upcoming sessions of course on NYPL techconnect classes page.",
+        examples=["https://www.nypl.org/techconnect?keyword=Python+for+Beginners"],
+    )
+
+
+class CourseHandoutsQuery(BaseModel):
+    """Schema for the query parameters of /courses/{id}/handout."""
+
+    language_code: str | None = Field(
+        default=None, examples=["en", "es", "zh", "bn", "fr", "ru"]
+    )
+
+
+class CourseHandoutsResponse(BaseModel):
+    """Schema for the response from /courses/{id}/handout."""
+
+    handouts: list[Handout] | None = None
+
+
+class CourseAdditionalMaterialResponse(BaseModel):
+    """Schema for the response from /courses/{id}/additional-material."""
+
+    additional_materials: list[HttpUrl] | None = None
+
+
+class CourseFormatsResponse(BaseModel):
+    """Schema for the response from /courses/formats."""
+
+    formats: list[str] = Field(..., examples=["class", "lab", "workshop"])
+
+
+class CourseLevelsResponse(BaseModel):
+    """Schema for the response from /courses/levels."""
+
+    levels: list[str] = Field(
+        ..., examples=["none", "beginner", "intermediate", "advanced"]
+    )
+
+
+class CourseSeriesResponse(BaseModel):
+    """Schema for the response from /courses/series."""
+
+    series: list[str] = Field(
+        ..., examples=["3d printing", "microsoft excel", "python"]
+    )
+
+
+class CourseLanguagesResponse(BaseModel):
+    """Schema for the response from /courses/languages."""
+
+    languages: list[str] = Field(..., examples=["['en', 'zh', 'es', 'bn', 'fr', 'ru']"])
