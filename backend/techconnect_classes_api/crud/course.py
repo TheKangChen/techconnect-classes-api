@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from techconnect_classes_api.models import Course, Format, Language, Level, Series
 from techconnect_classes_api.schemas.course import (
-    CourseAdditionalMaterialResponse,
+    CourseAdditionalMaterialsResponse,
     CourseDetailResponse,
     CourseFormatsResponse,
     CourseHandoutsResponse,
@@ -13,7 +13,6 @@ from techconnect_classes_api.schemas.course import (
     CourseNodeQuery,
     CourseNodeResponse,
     CourseSeriesResponse,
-    CourseUpcomingLinkResponse,
 )
 
 from .base import CRUDBase
@@ -81,9 +80,7 @@ class CourseCRUD(CRUDBase[Course, None, None]):
             link_to_upcoming_sessions=HttpUrl(upcoming_sessions_link),
         )
 
-    def get_upcoming(
-        self, db: Session, course_id: int
-    ) -> CourseUpcomingLinkResponse | None:
+    def get_upcoming(self, db: Session, course_id: int) -> HttpUrl | None:
         db_course = (
             db.query(self.model).filter(self.model.id == course_id).one_or_none()
         )
@@ -91,10 +88,8 @@ class CourseCRUD(CRUDBase[Course, None, None]):
         if not db_course:
             return None
 
-        return CourseUpcomingLinkResponse(
-            link_to_upcoming_sessions=HttpUrl(
-                f"https://www.nypl.org/techconnect?keyword={db_course.course_name.replace(' ', '+')}"
-            )
+        return HttpUrl(
+            f"https://www.nypl.org/techconnect?keyword={db_course.course_name.replace(' ', '+')}"
         )
 
     def get_handouts(
@@ -111,7 +106,7 @@ class CourseCRUD(CRUDBase[Course, None, None]):
 
     def get_additional_materials(
         self, db: Session, course_id: int
-    ) -> CourseAdditionalMaterialResponse | None:
+    ) -> CourseAdditionalMaterialsResponse | None:
         db_course = (
             db.query(self.model).filter(self.model.id == course_id).one_or_none()
         )
@@ -119,7 +114,7 @@ class CourseCRUD(CRUDBase[Course, None, None]):
         if not db_course:
             return None
 
-        return CourseAdditionalMaterialResponse(
+        return CourseAdditionalMaterialsResponse(
             additional_materials=db_course.additional_materials
         )
 

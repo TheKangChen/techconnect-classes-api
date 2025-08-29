@@ -52,31 +52,14 @@ class CourseDetailResponse(CourseBase):
     )
 
 
-class CourseUpcomingLinkResponse(BaseModel):
-    """Schema for the redirect link from /courses/{id}/upcoming."""
-
-    link_to_upcoming_sessions: HttpUrl = Field(
-        ...,
-        description="Upcoming sessions of course on NYPL techconnect classes page.",
-        examples=["https://www.nypl.org/techconnect?keyword=Python+for+Beginners"],
-    )
-
-
-class CourseHandoutsQuery(BaseModel):
-    """Schema for the query parameters of /courses/{id}/handout."""
-
-    language_code: str | None = Field(
-        default=None, examples=["en", "es", "zh", "bn", "fr", "ru"]
-    )
-
-
+# FIX: Return Dict of lang_code: handout_url instead
 class CourseHandoutsResponse(BaseModel):
-    """Schema for the response from /courses/{id}/handout."""
+    """Schema for the response from /courses/{id}/handouts."""
 
     handouts: list[Handout] | None = None
 
 
-class CourseAdditionalMaterialResponse(BaseModel):
+class CourseAdditionalMaterialsResponse(BaseModel):
     """Schema for the response from /courses/{id}/additional-material."""
 
     additional_materials: list[HttpUrl] | None = None
