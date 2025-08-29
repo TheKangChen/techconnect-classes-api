@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
 
 # Base schemas
@@ -28,6 +28,8 @@ class CourseNodeResponse(CourseBase):
 
     id: int = Field(..., ge=1)
 
+    model_config = ConfigDict(from_attributes=True)
+
 
 class CourseDetailResponse(CourseBase):
     """Schema for the /courses/{id}/ endpoint."""
@@ -40,6 +42,7 @@ class CourseDetailResponse(CourseBase):
     )
     level: str = Field(..., examples=["none", "beginner", "intermediate", "advanced"])
     format: str = Field(..., examples=["class", "lab", "workshop"])
+    prereqs: list[str] | None = Field(default=None, description="Course prerequisites.")
     available_handouts: list[Handout] | None = None
     additional_materials: list[HttpUrl] | None = None
     link_to_upcoming_sessions: HttpUrl = Field(
@@ -104,4 +107,16 @@ class CourseSeriesResponse(BaseModel):
 class CourseLanguagesResponse(BaseModel):
     """Schema for the response from /courses/languages."""
 
-    languages: list[str] = Field(..., examples=["['en', 'zh', 'es', 'bn', 'fr', 'ru']"])
+    languages: dict[str, str] = Field(
+        ...,
+        examples=[
+            {
+                "english: en",
+                "chinese: zh",
+                "spanish: es",
+                "bengali: bn",
+                "french: fr",
+                "russian: ru",
+            }
+        ],
+    )
