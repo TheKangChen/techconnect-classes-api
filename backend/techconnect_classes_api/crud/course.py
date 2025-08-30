@@ -25,6 +25,7 @@ class CourseCRUD(CRUDBase[Course, None, None]):
     ) -> list[CourseNodeResponse]:
         db_query = db.query(self.model)
 
+        # BUG: parameter not working
         if query_params.level:
             db_query = db_query.join(Level).filter(
                 self.model.level == query_params.level
@@ -43,6 +44,7 @@ class CourseCRUD(CRUDBase[Course, None, None]):
                 .distinct()
             )
 
+        # BUG: parameter not working
         if query_params.search:
             search_term = f"%{query_params.series.lower()}%"
             db_query = db_query.filter(self.model.course_name.ilike(search_term))
@@ -51,6 +53,7 @@ class CourseCRUD(CRUDBase[Course, None, None]):
 
         return [CourseNodeResponse.model_validate(course) for course in db_courses]
 
+    # BUG: not working
     def get_detail(self, db: Session, course_id: int) -> CourseDetailResponse | None:
         db_course = (
             db.query(self.model)
@@ -110,6 +113,7 @@ class CourseCRUD(CRUDBase[Course, None, None]):
 
         return CourseHandoutsResponse(handouts=handout_schemas)
 
+    # BUG: function not working
     def get_additional_materials(
         self, db: Session, course_id: int
     ) -> CourseAdditionalMaterialsResponse | None:
