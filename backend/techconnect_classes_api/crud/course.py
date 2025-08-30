@@ -13,6 +13,7 @@ from techconnect_classes_api.schemas.course import (
     CourseNodeQuery,
     CourseNodeResponse,
     CourseSeriesResponse,
+    HandoutResponse,
 )
 
 from .base import CRUDBase
@@ -102,7 +103,12 @@ class CourseCRUD(CRUDBase[Course, None, None]):
         if not db_course:
             return None
 
-        return CourseHandoutsResponse(handouts=db_course.handouts)
+        handout_schemas = [
+            HandoutResponse(language_code=h.language_code, url=h.url)
+            for h in db_course.handouts
+        ]
+
+        return CourseHandoutsResponse(handouts=handout_schemas)
 
     def get_additional_materials(
         self, db: Session, course_id: int

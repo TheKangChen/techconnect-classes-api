@@ -8,7 +8,7 @@ class CourseBase(BaseModel):
     )
 
 
-class Handout(BaseModel):
+class HandoutResponse(BaseModel):
     language_code: str = Field(..., examples=["en", "es", "zh", "bn", "fr", "ru"])
     url: HttpUrl = Field(..., description="Url to course handout")
 
@@ -43,7 +43,7 @@ class CourseDetailResponse(CourseBase):
     level: str = Field(..., examples=["none", "beginner", "intermediate", "advanced"])
     format: str = Field(..., examples=["class", "lab", "workshop"])
     prereqs: list[str] | None = Field(default=None, description="Course prerequisites.")
-    available_handouts: list[Handout] | None = None
+    available_handouts: list[HandoutResponse] | None = None
     additional_materials: list[HttpUrl] | None = None
     link_to_upcoming_sessions: HttpUrl = Field(
         ...,
@@ -52,11 +52,10 @@ class CourseDetailResponse(CourseBase):
     )
 
 
-# FIX: Return Dict of lang_code: handout_url instead
 class CourseHandoutsResponse(BaseModel):
     """Schema for the response from /courses/{id}/handouts."""
 
-    handouts: list[Handout] | None = None
+    handouts: list[HandoutResponse] | None = None
 
 
 class CourseAdditionalMaterialsResponse(BaseModel):
