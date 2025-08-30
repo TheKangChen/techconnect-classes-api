@@ -40,7 +40,7 @@ def fetch_all_courses(
             series: Course series/topic.
             search: Keyword for searching course name in databse.
     Returns:
-        List of courses with their id.
+        list[CourseNodeResponse]: List of courses with their id.
     """
     return course_crud.get_multiple_filtered(db, query_params=query_params)
 
@@ -60,7 +60,7 @@ def fetch_handouts_by_id(
         course_id (Path): Course id.
         db (Session): The database session.
     Returns:
-        list of handouts.
+        CourseHandoutsResponse: Object containing a list of handout objects with language code and handout url.
     """
     return course_crud.get_handouts(db, course_id=course_id)
 
@@ -74,14 +74,34 @@ def fetch_handouts_by_id(
 def fetch_additional_materials_by_id(
     course_id: Annotated[int, Path()], db: Annotated[Session, Depends(get_db)]
 ):
+    """Fetch additional materials by course id.
+
+    Parameters:
+        course_id (Path): Course id.
+        db (Session): The database session.
+    Returns:
+        CourseAdditionalMaterialsResponse: Object containing a list of additional material urls.
+    """
     return course_crud.get_additional_materials(db, course_id=course_id)
 
 
-@router.get("/{course_id}/upcoming", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+@router.get(
+    "/{course_id}/upcoming",
+    response_model=RedirectResponse,
+    status_code=status.HTTP_307_TEMPORARY_REDIRECT,
+)
 @limiter.limit("1/second")
 def redirect_to_upcoming_session_link_by_id(
     course_id: Annotated[int, Path()], db: Annotated[Session, Depends(get_db)]
 ):
+    """Fetch additional materials by course id.
+
+    Parameters:
+        course_id (Path): Course id.
+        db (Session): The database session.
+    Returns:
+        RedirectResponse: To NYPL TechConnect page of upcoming classes.
+    """
     url = course_crud.get_upcoming(db, course_id=course_id)
     if not url:
         raise HTTPException(
@@ -98,6 +118,14 @@ def redirect_to_upcoming_session_link_by_id(
 def fetch_course_detail(
     course_id: Annotated[int, Path()], db: Annotated[Session, Depends(get_db)]
 ):
+    """Fetch course detailed information by course id.
+
+    Parameters:
+        course_id (Path): Course id.
+        db (Session): The database session.
+    Returns:
+        CourseDetailResponse: Object containing all course detail.
+    """
     return course_crud.get_detail(db, course_id)
 
 
@@ -106,28 +134,56 @@ def fetch_course_detail(
 )
 @limiter.limit("1/second")
 def fetch_all_course_formats(db: Annotated[Session, Depends(get_db)]):
+    """Fetch all course formats.
+
+    Parameters:
+        db (Session): The database session.
+    Returns:
+        CourseFormatsResponse: All course formats.
+    """
     return course_crud.get_all_formats(db)
 
 
 @router.get(
-    "/formats", response_model=CourseLanguagesResponse, status_code=status.HTTP_200_OK
+    "/languages", response_model=CourseLanguagesResponse, status_code=status.HTTP_200_OK
 )
 @limiter.limit("1/second")
 def fetch_all_course_languages(db: Annotated[Session, Depends(get_db)]):
+    """Fetch all course languages.
+
+    Parameters:
+        db (Session): The database session.
+    Returns:
+        CourseLanguagesResponse: All course languages.
+    """
     return course_crud.get_all_languages(db)
 
 
 @router.get(
-    "/formats", response_model=CourseLevelsResponse, status_code=status.HTTP_200_OK
+    "/levels", response_model=CourseLevelsResponse, status_code=status.HTTP_200_OK
 )
 @limiter.limit("1/second")
 def fetch_all_course_levels(db: Annotated[Session, Depends(get_db)]):
+    """Fetch all course levels.
+
+    Parameters:
+        db (Session): The database session.
+    Returns:
+        CourseLevelsResponse: All course levels.
+    """
     return course_crud.get_all_levels(db)
 
 
 @router.get(
-    "/formats", response_model=CourseSeriesResponse, status_code=status.HTTP_200_OK
+    "/series", response_model=CourseSeriesResponse, status_code=status.HTTP_200_OK
 )
 @limiter.limit("1/second")
 def fetch_all_course_series(db: Annotated[Session, Depends(get_db)]):
+    """Fetch all course series/topics.
+
+    Parameters:
+        db (Session): The database session.
+    Returns:
+        CourseSeriesResponse: All course series/topics.
+    """
     return course_crud.get_all_series(db)
