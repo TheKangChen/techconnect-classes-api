@@ -25,10 +25,9 @@ class CourseCRUD(CRUDBase[Course, None, None]):
     ) -> list[CourseNodeResponse]:
         db_query = db.query(self.model)
 
-        # BUG: parameter not working
         if query_params.level:
             db_query = db_query.join(Level).filter(
-                self.model.level == query_params.level
+                Level.level_name == query_params.level
             )
 
         if query_params.format:
@@ -44,16 +43,10 @@ class CourseCRUD(CRUDBase[Course, None, None]):
                 .distinct()
             )
 
-        # BUG: parameter not working
-        if query_params.search:
-            search_term = f"%{query_params.series.lower()}%"
-            db_query = db_query.filter(self.model.course_name.ilike(search_term))
-
         db_courses = db_query.all()
 
         return [CourseNodeResponse.model_validate(course) for course in db_courses]
 
-    # BUG: not working
     def get_detail(self, db: Session, course_id: int) -> CourseDetailResponse | None:
         db_course = (
             db.query(self.model)
@@ -70,17 +63,24 @@ class CourseCRUD(CRUDBase[Course, None, None]):
 
         prereq_names = [p.prereq_course.course_name for p in db_course.prereqs]
 
+        handout_schemas = [
+            HandoutResponse(language_code=h.language_code, url=h.url)
+            for h in db_course.handouts
+        ]
+
+        additional_materials_list = [m.url for m in db_course.additional_materials]
+
         upcoming_sessions_link = f"https://www.nypl.org/techconnect?keyword={db_course.course_name.replace(' ', '+')}"
 
         return CourseDetailResponse(
             course_name=db_course.course_name,
             description=db_course.description,
             series=series_names,
-            level=db_course.level,
-            format=db_course.format,
+            level=db_course.level.level_name,
+            format=db_course.format.format_name,
             prereqs=prereq_names,
-            available_handouts=db_course.handouts,
-            additional_materials=db_course.additional_materials,
+            available_handouts=handout_schemas,
+            additional_materials=additional_materials_list,
             link_to_upcoming_sessions=HttpUrl(upcoming_sessions_link),
         )
 
@@ -113,7 +113,6 @@ class CourseCRUD(CRUDBase[Course, None, None]):
 
         return CourseHandoutsResponse(handouts=handout_schemas)
 
-    # BUG: function not working
     def get_additional_materials(
         self, db: Session, course_id: int
     ) -> CourseAdditionalMaterialsResponse | None:
@@ -124,8 +123,10 @@ class CourseCRUD(CRUDBase[Course, None, None]):
         if not db_course:
             return None
 
+        additional_materials_list = [m.url for m in db_course.additional_materials]
+
         return CourseAdditionalMaterialsResponse(
-            additional_materials=db_course.additional_materials
+            additional_materials=additional_materials_list
         )
 
     def get_all_formats(self, db: Session) -> CourseFormatsResponse:
