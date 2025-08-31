@@ -20,7 +20,6 @@ class CourseNodeQuery(BaseModel):
     level: str | None = None
     format: str | None = None
     series: str | None = None
-    search: str | None = None
 
 
 class CourseNodeResponse(CourseBase):
