@@ -38,12 +38,20 @@ class TestSettings(Settings):
     ENV: str = "test"
 
 
+class LocalDevSettings(Settings):
+    model_config = SettingsConfigDict(
+        env_file="./.env.local", env_file_encoding="utf-8", case_sensitive=True
+    )
+    ENV: str = "local"
+
 def get_setting(env: str = "dev") -> Settings:
     log.debug(f"Getting settings for env: {env}")
     if env.lower() in ["dev", "development"]:
         return DevSettings()
     if env.lower() in ["test", "testing"]:
         return TestSettings()
+    if env.lower() in ["local"]:
+        return LocalDevSettings()
     raise ValueError("Invalid environment. Must be 'dev' or 'test'.")
 
 

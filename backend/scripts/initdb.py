@@ -3,9 +3,9 @@ from argparse import ArgumentParser
 
 from scripts.core.drop_tables import drop_tables
 from scripts.core.init_database import create_tables_and_seed_database
-from techconnect_classes_api.core.log import setup_rich_logger
+from techconnect_classes_api.core.log import setup_logger
 
-setup_rich_logger()
+setup_logger()
 log = logging.getLogger(__name__)
 
 if __name__ == "__main__":
@@ -14,7 +14,7 @@ if __name__ == "__main__":
         "--env",
         help="Environment for which to seed the database",
         default="dev",
-        choices=["dev", "test"],
+        choices=["dev", "test", "local"],
     )
     parser.add_argument(
         "--drop-all",

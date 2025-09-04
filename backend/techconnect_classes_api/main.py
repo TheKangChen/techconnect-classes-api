@@ -8,9 +8,9 @@ from techconnect_classes_api.api import (
     # user_router,
 )
 from techconnect_classes_api.api.limiter import limiter
-from techconnect_classes_api.core.log import setup_rich_logger
+from techconnect_classes_api.core.log import setup_logger
 
-setup_rich_logger()
+setup_logger()
 
 app = FastAPI()
 

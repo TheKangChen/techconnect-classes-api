@@ -4,14 +4,8 @@ from functools import lru_cache
 from pathlib import Path
 
 from pydantic import BaseModel
-from rich.logging import RichHandler
 
 from techconnect_classes_api.core.config import settings
-
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-LOGGER_FILE = BASE_DIR / "logs" / f"{settings.ENV}.log"
-LOGGER_FILE.parent.mkdir(parents=True, exist_ok=True)
-LOGGER_FILE.touch(exist_ok=True)
 
 DATE_FORMAT = "%d %b %Y | %H:%M:%S"
 LOGGER_FORMAT = "%(asctime)s | %(message)s"
@@ -31,11 +25,17 @@ class LoggerConfig(BaseModel):
 def get_logger_config() -> LoggerConfig:
     handler_format = logging.Formatter(LOGGER_FORMAT, datefmt=DATE_FORMAT)
 
-    output_file_handler = logging.FileHandler(LOGGER_FILE)
-    output_file_handler.setFormatter(handler_format)
-
-    if settings.ENV.lower() in ["dev", "development", "test", "testing"]:
+    if settings.ENV.lower() in ["local"]:
         from rich.logging import RichHandler
+
+        # Use logs for local developments
+        base_dir = Path(__file__).resolve().parent.parent.parent
+        logger_file = base_dir / "logs" / f"{settings.ENV}.log"
+        logger_file.parent.mkdir(parents=True, exist_ok=True)
+        logger_file.touch(exist_ok=True)
+
+        output_file_handler = logging.FileHandler(logger_file)
+        output_file_handler.setFormatter(handler_format)
 
         return LoggerConfig(
             handlers=[
@@ -46,23 +46,23 @@ def get_logger_config() -> LoggerConfig:
             ],
             format=None,
             date_format=DATE_FORMAT,
-            logger_file=LOGGER_FILE,
+            logger_file=logger_file,
             level=LOG_LEVEL,
         )
 
     stdout_handler = logging.StreamHandler(sys.stdout)
-    stdout_handler.setFormatter(handler_format)
+    # stdout_handler.setFormatter(handler_format)
 
+    # Use stdout when on server or in containers
     return LoggerConfig(
-        handlers=[stdout_handler, output_file_handler],
-        format="%(levelname)s: %(asctime)s \t%(message)s",
+        handlers=[stdout_handler],
+        format="%(levelname)s: \t%(asctime)s \t%(message)s",
         date_format="%d-%b-%y %H:%M:%S",
-        logger_file=LOGGER_FILE,
         level=LOG_LEVEL,
     )
 
 
-def setup_rich_logger() -> None:
+def setup_logger() -> None:
     for name in logging.root.manager.loggerDict.keys():
         logging.getLogger(name).handlers = []
         logging.getLogger(name).propagate = True
