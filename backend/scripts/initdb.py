@@ -1,4 +1,5 @@
 import logging
+import os
 from argparse import ArgumentParser
 
 from scripts.core.drop_tables import drop_tables
@@ -13,7 +14,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--env",
         help="Environment for which to seed the database",
-        default="dev",
+        default=os.environ.get("ENV", "local"),
+
         choices=["dev", "test", "local"],
     )
     parser.add_argument(
