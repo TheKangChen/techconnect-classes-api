@@ -1,0 +1,38 @@
+name: tc-classes-api
+
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      target: development
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - test-db
+    env_file:
+      - .env.dev
+  db:
+    container_name: db
+    image: postgres:17-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+    env_file:
+      - .env.dev
+  test-db:
+    container_name: test-db
+    image: postgres:17-alpine
+    ports:
+      - 5433:5432
+    volumes:
+      - test-db:/var/lib/postgresql/data
+    env_file:
+      - .env.test
+volumes:
+  db:
+    driver: local
+  test-db:
+    driver: local

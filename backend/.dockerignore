@@ -63,6 +63,7 @@ coverage.xml
 
 # Logs:
 *.log
+logs/
 
 # Sphinx documentation
 docs/_build/
@@ -74,6 +75,7 @@ target/
 .env
 .env.dev
 .env.test
+.env.local
 .env.example
 .venv/
 venv/
@@ -93,3 +95,6 @@ session.local.vim
 
 # VS Code
 .vscode/
+
+# Mac OS
+.DS_Store
