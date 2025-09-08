@@ -44,7 +44,7 @@ class LocalDevSettings(Settings):
     )
     ENV: str = "local"
 
-def get_setting(env: str = "dev") -> Settings:
+def get_settings(env: str = "dev") -> Settings:
     log.debug(f"Getting settings for env: {env}")
     if env.lower() in ["dev", "development"]:
         return DevSettings()
@@ -57,4 +57,4 @@ def get_setting(env: str = "dev") -> Settings:
 
 _env = os.environ.get("ENV", "dev")
 
-settings = get_setting(env=_env)
+settings = get_settings(env=_env)

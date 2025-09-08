@@ -18,7 +18,7 @@ from scripts.core.data_transformations import (
     create_series_df,
     preprocess_dataframe,
 )
-from techconnect_classes_api.core.config import get_setting
+from techconnect_classes_api.core.config import get_settings
 from techconnect_classes_api.database import (
     get_engine,
     get_managed_db,
@@ -67,7 +67,7 @@ def seed_table_one(
 
 
 def seed_database(env: str, resource_file_path: Path) -> None:
-    settings = get_setting(env)
+    settings = get_settings(env)
     db_url = get_sqlalchemy_db_url(settings)
     engine = get_engine(db_url)
 
