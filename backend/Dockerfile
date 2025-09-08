@@ -1,5 +1,5 @@
 # --- Python Base ---
-FROM python:3.13-slim as python-base
+FROM python:3.13-slim AS python-base
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -11,7 +11,7 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 
 # --- Builder Stage: Install dependencies ---
-FROM python-base as builder
+FROM python-base AS builder
 
 COPY --from=ghcr.io/astral-sh/uv:0.8.14 /uv /uvx /bin/
 
@@ -23,7 +23,7 @@ RUN --mount=type=cache,target=/root/.cache/uv uv sync --locked --no-dev
 
 
 # --- Development Stage: Install dev dependencies & run server ---
-FROM builder as development
+FROM builder AS development
 ENV ENV=test
 
 WORKDIR /app
@@ -36,7 +36,7 @@ ENTRYPOINT ["uv", "run", "-m", "techconnect_classes_api.server"]
 
 
 # --- Production Stage ---
-FROM python-base as production
+FROM python-base AS production
 ENV ENV=dev
 
 COPY --from=builder /app /app
