@@ -1,6 +1,6 @@
-.PHONY: up down initdb dev test local-run local-initdb
+.PHONY: default down initdb dev test local-run local-initdb
 
-up:
+default:
 	docker compose up --build -d
 
 down:
@@ -16,7 +16,7 @@ dev:
 test:
 	docker compose up --build -d app test-db
 	docker exec -it --env-file .env.test app pytest tests/
-	docker compose down app test-db
+	docker compose down
 
 local-run:
 	ENV=local uv run -m techconnect_classes_api.server
