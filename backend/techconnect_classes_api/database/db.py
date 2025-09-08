@@ -2,12 +2,11 @@ import logging
 from contextlib import contextmanager
 from typing import Generator, TypeVar
 
-from sqlalchemy import MetaData, create_engine
-from sqlalchemy.engine import Engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import MetaData
+from sqlalchemy.orm import declarative_base
 
 from techconnect_classes_api.core.config import Settings, settings
+from techconnect_classes_api.database.session import get_local_session
 
 log = logging.getLogger(__name__)
 
@@ -28,15 +27,6 @@ ModelType = TypeVar("ModelType", bound=Base)
 
 def get_sqlalchemy_db_url(_settings: Settings) -> str:
     return f"postgresql://{_settings.POSTGRES_USER}:{_settings.POSTGRES_PASSWORD}@{_settings.POSTGRES_HOST}:{_settings.POSTGRES_PORT}/{_settings.POSTGRES_DB}"
-
-
-def get_engine(database_url: str, echo: bool = False) -> Engine:
-    return create_engine(url=database_url, echo=echo)
-
-
-def get_local_session(database_url: str, echo: bool = False) -> sessionmaker:
-    engine = get_engine(database_url, echo)
-    return sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def get_db() -> Generator:
