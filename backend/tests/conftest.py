@@ -269,6 +269,12 @@ class MockCourse:
         self.format_id = format_id
 
 
+class MockCourseSeries:
+    def __init__(self, course_id: int, series_id: int):
+        self.course_id = course_id
+        self.series_id = series_id
+
+
 @pytest.fixture
 def mock_levels_table_data():
     return [
@@ -310,14 +316,14 @@ def mock_series_table_data():
 
 @pytest.fixture
 def mock_languages_table_data():
-    return [
-        MockLanguage(language_code="en", language_name="english"),
-        MockLanguage(language_code="zh", language_name="chinese"),
-        MockLanguage(language_code="es", language_name="spanish"),
-        MockLanguage(language_code="bn", language_name="bengali"),
-        MockLanguage(language_code="fr", language_name="french"),
-        MockLanguage(language_code="ru", language_name="russian"),
-    ]
+    return {
+        "english": MockLanguage(language_code="en", language_name="english"),
+        "chinese": MockLanguage(language_code="zh", language_name="chinese"),
+        "spanish": MockLanguage(language_code="es", language_name="spanish"),
+        "bengali": MockLanguage(language_code="bn", language_name="bengali"),
+        "french": MockLanguage(language_code="fr", language_name="french"),
+        "russian": MockLanguage(language_code="ru", language_name="russian"),
+    }
 
 
 @pytest.fixture
@@ -365,4 +371,25 @@ def mock_courses_table_data():
             level_id=3,
             format_id=3
         ),
+    ]
+
+@pytest.fixture
+def mock_course_series_table_data():
+    return [
+        MockCourseSeries(course_id=1, series_id=8),
+        MockCourseSeries(course_id=1, series_id=9),
+        MockCourseSeries(course_id=1, series_id=7),
+        MockCourseSeries(course_id=2, series_id=13),
+        MockCourseSeries(course_id=2, series_id=12),
+        MockCourseSeries(course_id=3, series_id=4),
+        MockCourseSeries(course_id=3, series_id=2),
+        MockCourseSeries(course_id=3, series_id=6),
+        MockCourseSeries(course_id=4, series_id=10),
+        MockCourseSeries(course_id=4, series_id=1),
+        MockCourseSeries(course_id=4, series_id=6),
+        MockCourseSeries(course_id=5, series_id=14),
+        MockCourseSeries(course_id=6, series_id=5),
+        MockCourseSeries(course_id=6, series_id=3),
+        MockCourseSeries(course_id=6, series_id=6),
+        MockCourseSeries(course_id=6, series_id=11),
     ]
