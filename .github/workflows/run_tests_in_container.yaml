@@ -1,0 +1,31 @@
+name: Run backend tests in container
+on:
+  push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Docker Compose
+        uses: hoverkraft-tech/compose-action@v2.3.0
+        with: 
+          compose-file: "./backend/docker-compose.yaml"
+          up-flags: "--build -d"
+          down-flags: "--volumes"
+          services: |
+            app
+            test-db
+        env:
+          ENV: "test"
+          LOG_LEVEL: "DEBUG"
+          POSTGRES_USER: "test"
+          POSTGRES_PASSWORD: "test"
+          POSTGRES_DB: "classes_api_test"
+          POSTGRES_HOST: "test"-db
+          POSTGRES_PORT: "5432"
+
+      - name: Run tests in container
+        run: |
+          docker exec app pytest backend/tests/
