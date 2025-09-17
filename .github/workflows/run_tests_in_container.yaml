@@ -28,4 +28,4 @@ jobs:
 
       - name: Run tests in container
         run: |
-          docker exec app pytest backend/tests/
+          docker exec app pytest tests/

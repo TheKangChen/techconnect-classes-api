@@ -1,6 +1,5 @@
 # ENV files
 .env
-.env.dev
 .env.local
 
 # Logs
