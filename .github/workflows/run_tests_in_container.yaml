@@ -23,7 +23,7 @@ jobs:
           POSTGRES_USER: "test"
           POSTGRES_PASSWORD: "test"
           POSTGRES_DB: "classes_api_test"
-          POSTGRES_HOST: "test"-db
+          POSTGRES_HOST: "test-db"
           POSTGRES_PORT: "5432"
 
       - name: Run tests in container
