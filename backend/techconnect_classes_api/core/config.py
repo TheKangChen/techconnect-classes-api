@@ -13,6 +13,9 @@ class Settings(BaseSettings):
 
     ENV: str
     LOG_LEVEL: str
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
 
     SERVER_HOST: str
     SERVER_PORT: int
