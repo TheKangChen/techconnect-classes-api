@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.types import Integer, String
+from sqlalchemy.types import Boolean, Integer, String
 
 from techconnect_classes_api.database.db import Base
 
@@ -11,6 +11,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String, nullable=False, unique=True)
     hashed_password = Column(String, nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
 
     courses_taken = relationship("CourseTaken", back_populates="user")
     series_interested = relationship("SeriesInterested", back_populates="user")
