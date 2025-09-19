@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Request, status
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 
@@ -17,8 +17,16 @@ router = APIRouter(prefix="/users", tags=["users"])
 @router.post("/", status_code=status.HTTP_201_CREATED)
 @limiter.limit("1/second")
 def sign_up_user(
-    user_data: UserSignUp, db: Annotated[Session, Depends(get_db)]
+    request: Request, user_data: UserSignUp, db: Annotated[Session, Depends(get_db)]
 ) -> dict[str, str]:
+    """Endpoint to sign up for an account with username and password.
+
+    Parameters:
+        user_data (UserSignUp): Request body containing username and password.
+        db (Session): The database session.
+    Returns:
+        dict[str, str]: A dictionary containing the username created.
+    """
     user = user_crud.get_user(db, user_data.username)
     if user:
         raise HTTPException(

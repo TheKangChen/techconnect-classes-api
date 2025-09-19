@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
@@ -18,6 +18,7 @@ router = APIRouter()
 @router.post("/token", status_code=status.HTTP_200_OK)
 @limiter.limit("1/second")
 def login_for_access_token(
+    request: Request,
     db: Annotated[Session, Depends(get_db)],
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:

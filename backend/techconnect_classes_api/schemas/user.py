@@ -12,6 +12,4 @@ class UserCreate(UserBase):
 
 
 class UserInDB(UserBase):
-    """..."""
-    # id: int
     hashed_password: str
